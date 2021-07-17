@@ -1,4 +1,4 @@
-import { View, Text, Button, StyleSheet, SafeAreaView, StatusBar, Animated, Image } from "react-native";
+import { View, Text, Button, StyleSheet, SafeAreaView, StatusBar, Animated, Image, ImageBackground } from "react-native";
 import React, { useState} from 'react';
 
 
@@ -35,13 +35,18 @@ const Main = ({navigation}) => {
     const renderProgressBar = () => {
         return (
             <View styles={styles.container}>
+            
             <Image source={require("../Images/avatar.png")} style={styles.imageAvatar}/>
            
-                <View style={styles.progressBar}>
-                
-                    <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "white", width: "75%"}} />
-                </View>
-                <Text style={{fontWeight: 'bold', paddingTop: 10, marginLeft:"28%", fontSize: 16}}>Next Milestone: $8,000</Text>
+            <View >
+        
+            
+            <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "white", width: "75%"}} />
+            </View>
+            <Text style={{fontWeight: 'bold', paddingTop: 0, marginLeft:"28%", fontSize: 18}}>Next Milestone: $8,000</Text>
+            
+            
+        
                 
             </View>
          
@@ -49,8 +54,10 @@ const Main = ({navigation}) => {
     }
 
     return (<SafeAreaView>
-
+           <ImageBackground source={require("../Images/pixelbg.png")} style={{width: '100%', height: '100%'}}>
+   
             <View style = {{flexDirection: 'row'}}>
+            
             <View style = {{flexDirection: 'row', marginLeft:25, marginRight: 5}}>
             <Image source={require("../Images/coins.png")} style={styles.image}/>
             <Text  style ={styles.userTopTxtCoin}>{coins}</Text>
@@ -59,18 +66,19 @@ const Main = ({navigation}) => {
             <Text style ={styles.userTopTxt}>{userName}</Text>
            
             <Image source={require("../Images/badgeimgs1.png")} style={styles.badgeImage}/>
+           
             </View>
 
             
             
             <StatusBar/>
 
-            <Text style={{fontSize: 22, fontWeight: "bold", marginTop: "15%", marginLeft: "8%"}}>Goal: Save $10,000 for College</Text>
+            <Text style={{fontSize: 22, fontWeight: "bold", color: "green", marginTop: "5%", marginLeft: "8%"}}>Goal: Save $10,000 for College</Text>
             
             { renderProgressBar() }
 
-            <Text style={{marginLeft:"50%", marginTop:"12%" }}>Next milestone aprox: {milestone}</Text>
-
+            <Text style={{marginLeft:"50%", paddingTop: 30, marginBottom: 10, color: "white"}}>Next milestone aprox: {milestone}</Text>
+            </ImageBackground>
          </SafeAreaView>
 
          
@@ -83,10 +91,10 @@ export default Main;
 const styles = StyleSheet.create({
 
     container: {
-        flex: 1,
+        //flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#fff'
+        //backgroundColor: '#fff'
     },
     userTopTxt: {
         fontWeight: 'bold',
@@ -104,10 +112,10 @@ const styles = StyleSheet.create({
     progressBar:{
          alignItems:"center",
          width: '95%',
-        // marginTop: '120%',
-         padding: 5,
+         marginTop: 0,
+         padding: 0,
          marginLeft: 10,
-         height: 30,
+         height: 2,
          borderRadius: 5,
          borderStyle:"solid",
          borderWidth: .5,
@@ -115,8 +123,14 @@ const styles = StyleSheet.create({
          backgroundColor: "#9FE6A0"
         
     },
-    image: {
-        flex: 0,
+    imagebg: {
+        flex: 1,
+        justifyContent:"center",
+        resizeMode: 'cover'
+        // width: 450,
+        // height:800
+     },     
+     image: {
         width: 30,
         height: 50,
         marginTop:15,
@@ -126,7 +140,7 @@ const styles = StyleSheet.create({
         flex: 0,
         width: 80,
         height: 150,
-        marginTop:"75%",
+        marginTop:"100%",
         marginLeft: "60%",
         resizeMode: 'contain'
      },
