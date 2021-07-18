@@ -15,14 +15,14 @@ const Tabs = () => {
             style: {
                 position: 'absolute',
                 elevation: 20,
-                backgroundColor: "#76EAD7"
+                backgroundColor: "#053742"
             },
             labelStyle: {
                 fontSize: 14,
                 fontWeight: 'bold',
                 margin: 15,
                 padding: 0,
-                color: "#393E46"
+                color: "white"
               },
         }}
         >

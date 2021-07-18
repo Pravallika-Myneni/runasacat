@@ -1,16 +1,10 @@
-import { View, Text, Button, StyleSheet, SafeAreaView, StatusBar, Animated, Image, ImageBackground } from "react-native";
-import React, { useState} from 'react';
+import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, StatusBar, Animated, Image, ImageBackground } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { GameEngine } from "react-native-game-engine";
+import Physics from "../physics"
+import Matter from "matter-js";
+import entities from "../entities";
 
-
-//need to create avatarclass
-//need to child avatar to ProgressBar
-//may need to rethink the design. 
-//zigzag progress bars? 
-/**
- * if (avatar.position == posA.pos){
- *  move to towards next position
- * }
- */
 
 
 const Main = ({navigation}) => {
@@ -18,83 +12,90 @@ const Main = ({navigation}) => {
     const[userName, setUserName] = useState("John Smith");
     const[badges, setBadges] = useState(null);
     const[milestone, setMilestone] = useState("1 Mos");
-    const[goal, setGoals] = useState(null);
+    const[goal, setGoals] = useState(10000);
+    const[totalSaved, setTotalSaved] = useState(2510)
+    const[progress, setProgress]= useState(0)
+
+    const[running, setRunning] = useState(true);
+    useEffect(() => {
+       return setProgress(progress => (totalSaved / goal) * 100, 5000)     
+    }, [progress, totalSaved, goal])
 
     const[coins, addCoins] = useState(100);
     const handleCoins = () => {
         
-        //figure out point system.
-
+        //add point sys
+       
     }
 
-    // const [progress, setProgress] = useState(new Animated.Value(0));
-    // const progressAnim = progress.interpolate({
-    //     inputRange: [0, 100],
-    //     outputRange: ['0%','100%']
-    // })
-    const renderProgressBar = () => {
+    const renderProgress = () => {
         return (
+            
             <View styles={styles.container}>
-            
-            <Image source={require("../Images/avatar.png")} style={styles.imageAvatar}/>
-           
-            <View >
-        
-            
-            <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "white", width: "75%"}} />
+                <Image source={require("../Images/avatar.png")} style={styles.imageAvatar}/>
+                <View style={styles.progressBar}>
+                <Animated.View style={[StyleSheet.absoluteFill], {backgroundColor: "#8BED4F", width:`${progress}%`}}/>
+                </View>
+                <Text style={{fontWeight: 'bold', paddingTop: 0, marginLeft:"28%", fontSize: 18}}>Next Milestone: $8,000</Text>
+                <Text style={{marginLeft:"20%"}}>Amazing! You've saved ${totalSaved}/${goal}</Text>
+                <Text style={{marginLeft:"28%", color: "black"}}>Next milestone aprox: {milestone}</Text>  
             </View>
-            <Text style={{fontWeight: 'bold', paddingTop: 0, marginLeft:"28%", fontSize: 18}}>Next Milestone: $8,000</Text>
-            
-            
-        
-                
-            </View>
-         
         )
     }
 
-    return (<SafeAreaView>
-           <ImageBackground source={require("../Images/pixelbg.png")} style={{width: '100%', height: '100%'}}>
-   
+    const renderTesterInfo = () => {
+    
+            return (
+            <SafeAreaView style={{flexDirection: 'row', alignItems:'center', marginLeft:"5%"}}>
+                <Text style={styles.input}>Goal:$</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setGoals}
+                  value={goal}
+                  placeholder="e.g 100"
+                 // keyboardType="numeric"
+                />
+                <Text style={styles.input}>Total Saved:$</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={setTotalSaved}
+                  value={totalSaved}
+                  placeholder="e.g 100"
+                 // keyboardType="numeric"
+                />
+              </SafeAreaView>  
+            );
+    }
+
+    return (
+        
+    <SafeAreaView style={styles.container}>
+    <ImageBackground style={styles.imagebg}source={require("../Images/piggybankbg.png")}>
             <View style = {{flexDirection: 'row'}}>
-            
-            <View style = {{flexDirection: 'row', marginLeft:25, marginRight: 5}}>
-            <Image source={require("../Images/coins.png")} style={styles.image}/>
-            <Text  style ={styles.userTopTxtCoin}>{coins}</Text>
-            </View>
-            
-            <Text style ={styles.userTopTxt}>{userName}</Text>
-           
-            <Image source={require("../Images/badgeimgs1.png")} style={styles.badgeImage}/>
-           
+                <View style = {{flexDirection: 'row', marginLeft:25, marginRight: 5, marginBottom:15}}>
+                <Image source={require("../Images/coins.png")} style={styles.image}/>
+                <Text  style ={styles.userTopTxtCoin}>{coins}</Text>
+                </View>
+                <Text style ={styles.userTopTxt}>{userName}</Text>
+                <Image source={require("../Images/badgeimgs1.png")} style={styles.badgeImage}/>
             </View>
 
-            
-            
             <StatusBar/>
 
-            <Text style={{fontSize: 22, fontWeight: "bold", color: "green", marginTop: "5%", marginLeft: "8%"}}>Goal: Save $10,000 for College</Text>
-            
-            { renderProgressBar() }
-
-            <Text style={{marginLeft:"50%", paddingTop: 30, marginBottom: 10, color: "white"}}>Next milestone aprox: {milestone}</Text>
-            </ImageBackground>
-         </SafeAreaView>
-
-         
-        
-    )
+            <Text style={{fontSize: 22, fontWeight: "bold", color: "green", marginTop: "5%", marginLeft: "8%"}}>Goal: Save ${goal} for College</Text>
+            { renderTesterInfo()}
+            { renderProgress() }
+     </ImageBackground>
+    </SafeAreaView>   
+   )
 };
 
 export default Main;
-
 const styles = StyleSheet.create({
 
     container: {
-        //flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        //backgroundColor: '#fff'
+       flex: 1,
+       backgroundColor: '#F9F9F9'
     },
     userTopTxt: {
         fontWeight: 'bold',
@@ -110,25 +111,19 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     progressBar:{
-         alignItems:"center",
-         width: '95%',
-         marginTop: 0,
-         padding: 0,
-         marginLeft: 10,
-         height: 2,
-         borderRadius: 5,
-         borderStyle:"solid",
-         borderWidth: .5,
-         borderColor: '#393E46',
-         backgroundColor: "#9FE6A0"
+        height: 20,
+        width: '100%',
+        backgroundColor: 'white',
+        borderColor: '#000',
+        borderWidth: 2,
+        borderRadius: 5,
+        flexDirection:"row"
         
     },
     imagebg: {
         flex: 1,
-        justifyContent:"center",
         resizeMode: 'cover'
-        // width: 450,
-        // height:800
+
      },     
      image: {
         width: 30,
@@ -138,10 +133,10 @@ const styles = StyleSheet.create({
      },
      imageAvatar: {
         flex: 0,
-        width: 80,
-        height: 150,
-        marginTop:"100%",
-        marginLeft: "60%",
+        width: 70,
+        height: 110,
+        marginTop:"95%",
+        marginLeft: "75%",
         resizeMode: 'contain'
      },
      badgeImage: {
@@ -150,10 +145,27 @@ const styles = StyleSheet.create({
         height: 60,
         marginTop:15,
         marginLeft:25,
-        //marginRight:20,
         resizeMode: 'contain'
      },
-
-
-
+     input:{
+        fontWeight:"bold", 
+        fontSize: 18,
+        padding: 5, 
+        alignSelf:"center"
+     }
 })
+
+
+
+
+/**
+            // <GameEngine 
+            // systems={[Physics]}
+            // entities={entities()}
+            // running={running}
+            // style={{position: 'absolute',top: 0, left:0, right:0,bottom:0}}>
+            // </GameEngine>
+            
+
+            
+            */
